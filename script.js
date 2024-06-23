@@ -18,9 +18,20 @@ const khodams = [
     {name: 'Khodam Dewa Zeus', image: 'assets/zeus.jpeg'}
 ];
 
-function getRandomKhodam() {
-    const randomIndex = Math.floor(Math.random() * khodams.length);
-    return khodams[randomIndex];
+// Function to hash the name and map it to an index
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        let char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+function getKhodamByName(name) {
+    const index = Math.abs(hashCode(name)) % khodams.length;
+    return khodams[index];
 }
 
 function addKhodamToTable(name) {
@@ -30,12 +41,12 @@ function addKhodamToTable(name) {
     const nameCell = document.createElement('td');
     nameCell.textContent = name;
 
+    const khodam = getKhodamByName(name);
     const imageCell = document.createElement('td');
     const image = document.createElement('img');
-    const khodam = getRandomKhodam();
     image.src = khodam.image;
     image.alt = khodam.name;
-    image.style.width = '200px';  // Atur ukuran gambar sesuai kebutuhan
+    image.style.width = '200px'; // Atur ukuran gambar sesuai kebutuhan
     imageCell.appendChild(image);
 
     const khodamNameCell = document.createElement('td');
